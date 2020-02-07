@@ -7,17 +7,16 @@ pipeline {
       stage('Build App') {
         steps {
           checkout scm
-          sh "${mvnCmd} install -DskipTests=true"
+          sh "mvn install -DskipTests=true"
         }
       }
 
     stage('Build Image') {
       steps {
-        sh "cp target/openshift-tasks.war target/ROOT.war"
         script {
           openshift.withCluster() {
-            openshift.withProject("dev") {
-              openshift.selector("bc", "tasks").startBuild("--from-file=target/ROOT.war", "--wait=true")
+            openshift.withProject("vpogu-springboot") {
+              openshift.selector("bc", "springboot-s2i").startBuild("--wait=true")
             }
           }
         }
@@ -28,8 +27,8 @@ pipeline {
       steps {
         script {
           openshift.withCluster() {
-            openshift.withProject("dev") {
-              openshift.selector("dc", "tasks").rollout().latest();
+            openshift.withProject("vpogu-springboot") {
+              openshift.selector("dc", "springboot-s2i").rollout().latest();
             }
           }
         }
