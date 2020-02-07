@@ -16,7 +16,7 @@ pipeline {
         script {
           openshift.withCluster() {
             openshift.withProject("vpogu-springboot") {
-              openshift.selector("bc", "springboot-s2i").startBuild("--wait=true")
+              openshift.selector("bc", "springboot-s2i").startBuild("--from-dir='.'").logs("-f")
             }
           }
         }
