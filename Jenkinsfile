@@ -17,6 +17,12 @@ pipeline {
           openshift.withCluster() {
             openshift.withProject("vpogu-springboot") {
               openshift.selector("bc", "springboot-s2i").startBuild("--from-dir='.'").logs("-f")
+              def version = openshift.selector("bc", "springboot-s2i").object().status.lastVersion
+              def build = openshift.selector("build", "springboot-s2i-${version}").object()
+              if (build.status.phase == 'Failed'){
+                currentBuild.result = "FAILURE"
+                throw new Exception(build.status.message)
+              }
             }
           }
         }
