@@ -1,6 +1,6 @@
 ## Springboot S2I example
 
-Give jenkins sa access to `vpogu-springboot` project
+add `edit` access to jenkins `serviceaccount` for `vpogu-springboot` project
 
 ```bash
 oc policy add-role-to-user edit system:serviceaccount:jenkins:jenkins -n vpogu-springboot
