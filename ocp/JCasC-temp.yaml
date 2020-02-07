@@ -1,0 +1,23 @@
+jenkins:
+  clouds:
+    - kubernetes:
+        - containers:
+            - alwaysPullImage: true
+              args: "^${computer.jnlpmac} ^${computer.name}"
+              image: "image-registry.openshift-image-registry.svc:5000/openshift/ose-cli:latest"
+              livenessProbe:
+                failureThreshold: 0
+                initialDelaySeconds: 0
+                periodSeconds: 0
+                successThreshold: 0
+                timeoutSeconds: 0
+              name: "jnlp"
+              workingDir: "/tmp"
+          label: "ose-cli"
+          name: "ose-cli"
+          serviceAccount: "jenkins"
+          workspaceVolume:
+            emptyDirWorkspaceVolume:
+              memory: false
+          yamlMergeStrategy: "override"
+
