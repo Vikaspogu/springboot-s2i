@@ -1,3 +1,4 @@
+def namespace = "vpogu-springboot"
 
 pipeline {
   agent {
@@ -15,7 +16,7 @@ pipeline {
       steps {
         script {
           openshift.withCluster() {
-            openshift.withProject("vpogu-springboot") {
+            openshift.withProject("${namespace}") {
               openshift.selector("bc", "springboot-s2i").startBuild("--from-dir='.'").logs("-f")
               def version = openshift.selector("bc", "springboot-s2i").object().status.lastVersion
               def build = openshift.selector("build", "springboot-s2i-${version}").object()
@@ -33,7 +34,7 @@ pipeline {
       steps {
         script {
           openshift.withCluster() {
-            openshift.withProject("vpogu-springboot") {
+            openshift.withProject("${namespace}") {
               openshift.selector("dc", "springboot-s2i").rollout().latest();
             }
           }
